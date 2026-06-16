@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import api from "../Api/axios";
+import api from "../api/axios";
 
 const HomeSearch = () => {
   const [search, setSearch] = useState<string>("");

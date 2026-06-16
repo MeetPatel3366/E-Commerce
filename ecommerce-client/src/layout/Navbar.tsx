@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router";
-import api from "../Api/axios";
+import api from "../api/axios";
 import { FaHome, FaShoppingCart } from "react-icons/fa";
 import { CiStar } from "react-icons/ci";
 import type { User } from "../Types/productTypes";
