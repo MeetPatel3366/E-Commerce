@@ -6,6 +6,12 @@ export interface Review {
   reviewerEmail: string;
 }
 
+export interface Dimensions{
+  width:number
+  height:number 
+  depth:number
+}
+
 export interface Product {
   id: number;
   title: string;
@@ -20,6 +26,13 @@ export interface Product {
   brand: string;
   thumbnail: string;
   images: string[];
+  availabilityStatus: string;
+  sku:string
+  weight:number
+  dimensions:Dimensions
+  shippingInformation:string
+  warrantyInformation:string
+  returnPolicy:string
 }
 
 export interface ProductResponse {
