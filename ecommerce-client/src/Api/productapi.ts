@@ -36,6 +36,6 @@ export const searchProducts = async (
 export const getProduct = async (id: number) => {
   const res = await api.get(`/products/${id}`);
   const data = res.data;
-
+  
   return data;
 };

@@ -35,3 +35,9 @@ export interface User {
   lastName: string;
   image: string;
 }
+
+export interface Category {
+  slug: string;
+  name: string;
+  url: string;
+}

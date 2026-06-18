@@ -3,7 +3,7 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { Product } from "../Types/productTypes";
+import type { Category, Product } from "../Types/productTypes";
 import {
   getCategories,
   getProduct,
@@ -49,6 +49,7 @@ export const fetchCategories = createAsyncThunk(
 export const fetchProductsByCategories = createAsyncThunk(
   "products/list",
   async ({ category, page }: { category: string; page: number }) => {
+    console.log("page category: ",page)
     const res = await getProductsByCategory(category, 10, page * 10);
     return res;
   },
@@ -57,6 +58,7 @@ export const fetchProductsByCategories = createAsyncThunk(
 export const fetchSearchProduct = createAsyncThunk(
   "products/search",
   async ({ query, page }: { query: string; page: number }) => {
+    console.log("page in slice when search: ",page)
     const res = await searchProducts(query, 10, page * 10);
     return res;
   },
@@ -81,10 +83,14 @@ const productSlice = createSlice({
       state.hasMore = true;
     },
     setSearchQuery(state, action: PayloadAction<string>) {
+      console.log("action set search : ",action)
       state.searchQuery = action.payload;
       state.page = 0;
       state.searchResults = [];
       state.hasMore = true;
+    },
+    nextPage(state){
+      state.page+=1;
     },
   },
   extraReducers: (builder) => {
@@ -95,7 +101,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload.map((item: any) => item.slug);
+        state.categories = action.payload.map((item: Category) => item.slug);
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
@@ -135,6 +141,7 @@ const productSlice = createSlice({
             ...action.payload.products,
           ];
         }
+        state.hasMore = action.payload.products.length > 0;
       })
       .addCase(fetchSearchProduct.rejected, (state, action) => {
         state.loading = false;
@@ -156,5 +163,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { setCategory, setSearchQuery } = productSlice.actions;
+export const { setCategory, setSearchQuery,nextPage } = productSlice.actions;
 export default productSlice.reducer;
