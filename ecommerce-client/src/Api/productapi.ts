@@ -33,9 +33,16 @@ export const searchProducts = async (
   return data;
 };
 
+export const getAllProducts = async (limit: number, skip: number) => {
+  const res = await api.get(`/products?limit=${limit}&skip=${skip}`);
+  const data = res.data;
+
+  return data;
+};
+
 export const getProduct = async (id: number) => {
   const res = await api.get(`/products/${id}`);
   const data = res.data;
-  
+
   return data;
 };
