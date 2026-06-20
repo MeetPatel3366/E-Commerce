@@ -8,7 +8,7 @@ interface Props {
 const SearchBar = ({ value, onChange }: Props) => {
   return (
     <div className="p-4">
-      <div className="flex items-center border rounded-lg px-3 bg-white">
+      <div className="flex items-center border rounded-lg px-3 bg-white dark:bg-gray-800 dark:border-gray-600">
         <FiSearch />
 
         <input
