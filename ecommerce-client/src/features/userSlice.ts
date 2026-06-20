@@ -1,12 +1,19 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import type { User } from "../Types/productTypes";
 import { getUser } from "../api/userApi";
+
+type Theme = "light" | "dark";
 
 interface AuthState {
   user: User | null;
   isAuth: boolean;
   loading: boolean;
   error: string | null;
+  theme: Theme;
 }
 
 const initialState: AuthState = {
@@ -14,6 +21,7 @@ const initialState: AuthState = {
   isAuth: false,
   loading: false,
   error: null,
+  theme: "light",
 };
 
 export const fetchUser = createAsyncThunk("/auth/fetchUser", async () => {
@@ -30,6 +38,9 @@ const userSlice = createSlice({
       state.user = null;
       state.isAuth = false;
       state.error = null;
+    },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,5 +64,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setTheme } = userSlice.actions;
 export default userSlice.reducer;

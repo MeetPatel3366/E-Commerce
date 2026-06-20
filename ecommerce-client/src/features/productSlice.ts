@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import type { Category, Product } from "../Types/productTypes";
 import {
+  getAllProducts,
   getCategories,
   getProduct,
   getProductsByCategory,
@@ -49,7 +50,7 @@ export const fetchCategories = createAsyncThunk(
 export const fetchProductsByCategories = createAsyncThunk(
   "products/list",
   async ({ category, page }: { category: string; page: number }) => {
-    console.log("page category: ",page)
+    console.log("page category: ", page);
     const res = await getProductsByCategory(category, 10, page * 10);
     return res;
   },
@@ -58,7 +59,7 @@ export const fetchProductsByCategories = createAsyncThunk(
 export const fetchSearchProduct = createAsyncThunk(
   "products/search",
   async ({ query, page }: { query: string; page: number }) => {
-    console.log("page in slice when search: ",page)
+    console.log("page in slice when search: ", page);
     const res = await searchProducts(query, 10, page * 10);
     return res;
   },
@@ -68,6 +69,14 @@ export const fetchProduct = createAsyncThunk(
   "/products/details",
   async (id: number) => {
     const res = await getProduct(id);
+    return res;
+  },
+);
+
+export const fetchAllProducts = createAsyncThunk(
+  "/products/all",
+  async ({ page }: { page: number }) => {
+    const res = await getAllProducts(10, page * 10);
     return res;
   },
 );
@@ -83,18 +92,35 @@ const productSlice = createSlice({
       state.hasMore = true;
     },
     setSearchQuery(state, action: PayloadAction<string>) {
-      console.log("action set search : ",action)
+      console.log("action set search : ", action);
       state.searchQuery = action.payload;
       state.page = 0;
       state.searchResults = [];
       state.hasMore = true;
     },
-    nextPage(state){
-      state.page+=1;
+    nextPage(state) {
+      state.page += 1;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchAllProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.meta.arg.page == 0) {
+          state.products = action.payload.products;
+        } else {
+          state.products = [...state.products, ...action.payload.products];
+        }
+        state.hasMore = action.payload.products.length > 0;
+      })
+      .addCase(fetchAllProducts.rejected, (state) => {
+        state.loading = false;
+      })
+
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -163,5 +189,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { setCategory, setSearchQuery,nextPage } = productSlice.actions;
+export const { setCategory, setSearchQuery, nextPage } = productSlice.actions;
 export default productSlice.reducer;
