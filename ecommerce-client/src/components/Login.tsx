@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useAppDispatch } from "../app/hooks";
+import { fetchUser } from "../features/userSlice";
+import { useNavigate } from "react-router";
 
 interface UserLogin {
   email: string;
@@ -6,6 +9,8 @@ interface UserLogin {
 }
 
 const Login = () => {
+  const disptach=useAppDispatch()
+  const navigate=useNavigate()
   const [formData, setFormData] = useState<UserLogin>({
     email: "",
     password: "",
@@ -23,17 +28,19 @@ const Login = () => {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify(formData));
-    localStorage.setItem("isAuth", JSON.stringify({ isAuth: true }));
+    disptach(fetchUser()).unwrap()
+
+    navigate("/")
+    
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="w-full min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900">
       <div className=" w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
         <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Login</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">Email </label>
           <input
-            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:text-black"
             type="email"
             name="email"
             id="email"
@@ -44,7 +51,7 @@ const Login = () => {
 
           <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">Password</label>
           <input
-           className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+           className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:text-black"
             type="password"
             name="password"
             id="password"

@@ -1,33 +1,53 @@
-import { createBrowserRouter, RouterProvider } from "react-router"
-import MainLayout from "./layout/MainLayout"
-import Home from "./layout/Home"
-import Cart from "./components/Cart"
-import Favourite from "./components/Favourite"
+import { createBrowserRouter, RouterProvider } from "react-router";
+import MainLayout from "./layout/MainLayout";
+import { lazy, Suspense } from "react";
+import ProductSkeleton from "./components/ProductSkeleton";
+
+const Home = lazy(() => import("./layout/Home"));
+const Cart = lazy(() => import("./components/Cart"));
+const Favourite = lazy(() => import("./components/Favourite"));
+const ProductDetails = lazy(() => import("./components/ProductDetails"));
+const Login = lazy(() => import("./components/Login"));
+const Newcomponent = lazy(() => import("./components/Newcomponent"));
 
 const App = () => {
-  const router=createBrowserRouter([
+  const router = createBrowserRouter([
     {
-      path:"/",
-      element:<MainLayout/>,
-      children:[
+      path: "/",
+      element: <MainLayout />,
+      children: [
         {
-          path:"/home",
-          element:<Home/>
+          path: "/",
+          element: <Home />,
         },
         {
-          path:"/cart",
-          element:<Cart/>
+          path: "/product-details/:id",
+          element: (
+            <Suspense fallback={<ProductSkeleton />}>
+              <ProductDetails />
+            </Suspense>
+          ),
         },
         {
-          path:"/favourite",
-          element:<Favourite/>
-        }
-      ]
-    }
-  ])
-  return (
-    <RouterProvider router={router}/>
-  )
-}
+          path: "/cart",
+          element: <Cart />,
+        },
+        {
+          path: "/favourite",
+          element: <Favourite />,
+        },
+        {
+          path: "/login",
+          element: <Login />,
+        },
+        {
+          path: "/new",
+          element: <Newcomponent />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
+};
 
-export default App
+export default App;
